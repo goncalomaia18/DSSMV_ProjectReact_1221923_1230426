@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-const MainActivity = () => {
+const MainActivity = ({navigation}) => {
     return (
         <View style={styles.container}>
             {/* Toolbar */}
@@ -29,7 +29,10 @@ const MainActivity = () => {
                         <Text style={styles.buttonText}>Verdade ou Consequência</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button}
+                                      onPress={() => navigation.navigate('JogoPersonalizado')} // Navegação
+
+                    >
                         <Text style={styles.buttonText}>
                             Verdade ou Consequência Personalizado
                         </Text>
