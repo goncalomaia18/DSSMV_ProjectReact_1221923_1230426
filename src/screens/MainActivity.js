@@ -1,14 +1,25 @@
-import React from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    Button,
-    TouchableOpacity,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import PerguntaScreen from "./PerguntaScreen";
 
 const MainActivity = () => {
+    const [isQuestionScreen, setIsQuestionScreen] = useState(false); // Controla a navegação
+
+    // Função para navegar para a tela de perguntas
+    const goToQuestionScreen = () => {
+        setIsQuestionScreen(true);
+    };
+
+    // Função para voltar para a tela inicial
+    const goBack = () => {
+        setIsQuestionScreen(false);
+    };
+
+    // Se estiver na tela de perguntas, exibe a tela de perguntas
+    if (isQuestionScreen) {
+        return <PerguntaScreen goBack={goBack} />;
+    }
+
     return (
         <View style={styles.container}>
             {/* Toolbar */}
@@ -25,7 +36,7 @@ const MainActivity = () => {
                 />
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={goToQuestionScreen}>
                         <Text style={styles.buttonText}>Verdade ou Consequência</Text>
                     </TouchableOpacity>
 
@@ -55,13 +66,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-    spinnerContainer: {
-        padding: 16,
-    },
-    spinnerPlaceholder: {
-        fontSize: 16,
-        color: '#000',
-    },
     mainContent: {
         flex: 1,
         padding: 16,
@@ -71,7 +75,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         marginTop: 16,
-        borderRadius: 100, // Para fazer a imagem circular, ajuste conforme necessário
+        borderRadius: 100,
     },
     buttonContainer: {
         flexDirection: 'row',
