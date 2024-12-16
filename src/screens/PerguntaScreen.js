@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { fetchPergunta } from '../services/api'; // Caminho para o arquivo da API
 
 const PerguntaScreen = ({ goBack }) => {
+    const [pergunta, setPergunta] = useState('Carregando pergunta...');
+
+    // Função para carregar uma pergunta
+    const carregarPergunta = async () => {
+        try {
+            const data = await fetchPergunta();
+            if (data.length > 0) {
+                const perguntaAleatoria = data[Math.floor(Math.random() * data.length)];
+                setPergunta(perguntaAleatoria.perguntas); // Atualiza com uma pergunta aleatória
+            } else {
+                setPergunta('Nenhuma pergunta encontrada.');
+            }
+        } catch (error) {
+            setPergunta('Erro ao carregar pergunta.');
+        }
+    };
+
+    // Carrega uma pergunta ao montar o componente
+    useEffect(() => {
+        carregarPergunta();
+    }, []);
+
+
     return (
         <View style={styles.container}>
             {/* Botão de Voltar */}
@@ -12,9 +36,9 @@ const PerguntaScreen = ({ goBack }) => {
             {/* Conteúdo da tela de Perguntas */}
             <View style={styles.mainContent}>
                 <Text style={styles.title}>Verdade</Text>
-                <Text style={styles.pergunta}>Qual é a sua cor favorita?</Text>
+                <Text style={styles.pergunta}>{pergunta}</Text>
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={carregarPergunta}>
                     <Text style={styles.buttonText}>Respondeu</Text>
                 </TouchableOpacity>
 
@@ -33,14 +57,14 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     backButton: {
-        marginBottom: 20,  // Ajusta a margem inferior
+        marginBottom: 20,
         backgroundColor: '#D81B60',
-        paddingVertical: 10,  // Ajusta o padding vertical para diminuir o tamanho
-        paddingHorizontal: 16, // Ajusta o padding horizontal
+        paddingVertical: 10,
+        paddingHorizontal: 16,
         borderRadius: 8,
         alignItems: 'center',
-        width: 'auto', // Garante que o botão tenha o tamanho ideal
-        alignSelf: 'flex-start', // Alinha o botão à esquerda
+        width: 'auto',
+        alignSelf: 'flex-start',
     },
     buttonText: {
         color: '#FFFFFF',
@@ -61,6 +85,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#333333',
         marginBottom: 20,
+        textAlign: 'center',
     },
     button: {
         backgroundColor: '#D81B60',
