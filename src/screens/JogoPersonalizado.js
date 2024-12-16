@@ -3,7 +3,7 @@ import {
     View,
     Text,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
 } from 'react-native';
 
 export default function App() {
