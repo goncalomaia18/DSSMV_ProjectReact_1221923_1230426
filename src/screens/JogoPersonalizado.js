@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -6,7 +6,26 @@ import {
     StyleSheet,
 } from 'react-native';
 
-export default function App() {
+import PerguntaPersonlizadoScreen from "./PerguntaPersonlizadoScreen";
+
+const JogoPersonalizado = () => {
+    const [isQuestionScreen, setIsQuestionScreen] = useState(false);
+
+    // Função para navegar para a tela de perguntas
+    const goToQuestionScreen = () => {
+        setIsQuestionScreen(true);
+    };
+
+    // Função para voltar para a tela inicial
+    const goBack = () => {
+        setIsQuestionScreen(false);
+    };
+
+    // Se estiver na tela de perguntas, exibe a tela de perguntas
+    if (isQuestionScreen) {
+        return <PerguntaPersonlizadoScreen goBack={goBack} />;
+    }
+
     return (
         <View style={styles.container}>
             {/* Seção "Verdade" */}
@@ -32,12 +51,12 @@ export default function App() {
             </View>
 
             {/* Botão "Jogar" */}
-            <TouchableOpacity style={styles.playButton}>
+            <TouchableOpacity style={styles.playButton} onPress={goToQuestionScreen}>
                 <Text style={styles.playButtonText}>Jogar</Text>
             </TouchableOpacity>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -81,3 +100,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
+
+export default JogoPersonalizado;
