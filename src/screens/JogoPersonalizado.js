@@ -4,12 +4,18 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
+    Alert,
+    TextInput,
 } from 'react-native';
 
 import PerguntaPersonlizadoScreen from "./PerguntaPersonlizadoScreen";
+import { AddPerguntaPersonalizada } from '../services/api';
+
 
 const JogoPersonalizado = () => {
     const [isQuestionScreen, setIsQuestionScreen] = useState(false);
+
+    const [novaPergunta, setNovaPergunta] = useState('');
 
     // Função para navegar para a tela de perguntas
     const goToQuestionScreen = () => {
@@ -26,12 +32,34 @@ const JogoPersonalizado = () => {
         return <PerguntaPersonlizadoScreen goBack={goBack} />;
     }
 
+    const adicionarPergunta = async () => {
+        if (!novaPergunta.trim()) {
+            Alert.alert('Erro', 'O campo de pergunta não pode estar vazio.');
+            return;
+        }
+
+        try {
+            const data = await AddPerguntaPersonalizada({ pergunta: novaPergunta });
+            Alert.alert('Sucesso', 'Pergunta adicionada com sucesso!');
+            setNovaPergunta(''); // Limpa o campo de entrada
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível adicionar a pergunta.');
+        }
+    };
+
+
     return (
         <View style={styles.container}>
             {/* Seção "Verdade" */}
             <Text style={styles.title}>Verdade</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Digite uma nova verdade"
+                value={novaPergunta}
+                onChangeText={setNovaPergunta}
+            />
             <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button}  onPress={adicionarPergunta}>
                     <Text style={styles.buttonText}>Adicionar Verdade</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}>

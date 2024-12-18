@@ -50,3 +50,25 @@ export const fetchPerguntaPersonalizada = async () => {
         throw error; // Relança o erro para tratamento no componente
     }
 };
+export const AddPerguntaPersonalizada = async () => {
+    try {
+        const response = await fetch(API_URL_PER, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-apikey': API_KEY,
+                'cache-control': 'no-cache',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao adicionar a pergunta');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error; // Relança o erro para tratamento no componente
+    }
+};

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import {fetchPergunta, fetchPerguntaPersonalizada} from '../services/api'; // Caminho para o arquivo da API
+import {fetchPerguntaPersonalizada} from '../services/api'; // Caminho para o arquivo da API
 
 const PerguntaScreen = ({ goBack }) => {
     const [pergunta, setPergunta] = useState('A carregar pergunta...');

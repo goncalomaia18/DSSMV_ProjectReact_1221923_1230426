@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import PerguntaScreen from "./PerguntaScreen";
+import JogoPersonalizado from "./JogoPersonalizado";
 
 const MainActivity = () => {
     const [isQuestionScreen, setIsQuestionScreen] = useState(false); // Controla a navegação
+    const [isCustomGameScreen, setIsCustomGameScreen] = useState(false); // Controla a tela personalizada
 
     // Função para navegar para a tela de perguntas
     const goToQuestionScreen = () => {
         setIsQuestionScreen(true);
     };
 
+    const goToCustomGameScreen = () => {
+        setIsCustomGameScreen(true);
+    };
+
     // Função para voltar para a tela inicial
     const goBack = () => {
         setIsQuestionScreen(false);
+        setIsCustomGameScreen(false);
     };
+
+    if (isCustomGameScreen) {
+        return <JogoPersonalizado goBack={goBack} />;
+    }
 
     // Se estiver na tela de perguntas, exibe a tela de perguntas
     if (isQuestionScreen) {
@@ -40,7 +51,7 @@ const MainActivity = () => {
                         <Text style={styles.buttonText}>Verdade ou Consequência</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={goToCustomGameScreen}>
                         <Text style={styles.buttonText}>
                             Verdade ou Consequência Personalizado
                         </Text>
