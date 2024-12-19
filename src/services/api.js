@@ -1,6 +1,10 @@
 const API_URL = 'https://verdadeconsequencia-3d59.restdb.io/rest/perguntas';
+
 const API_CONSEQUENCIA_URL = 'https://verdadeconsequencia-3d59.restdb.io/rest/consequencias';
 const API_KEY = 'f9ac62cfdf5b449cd16ee1a1052d328b8e6b5'; // Substitua pela chave da API
+
+const API_KEY = 'f9ac62cfdf5b449cd16ee1a1052d328b8e6b5';
+const API_URL_PER = 'https://verdadeconsequencia-3d59.restdb.io/rest/perguntaspersonalizado';
 
 // Função para buscar perguntas
 export const fetchPergunta = async () => {
@@ -26,10 +30,16 @@ export const fetchPergunta = async () => {
     }
 };
 
+
 // Função para buscar consequencias
 export const fetchConsequencia = async () => {
     try {
         const response = await fetch(API_CONSEQUENCIA_URL, {
+
+// Função para buscar perguntas personalizadas
+export const fetchPerguntaPersonalizada = async () => {
+    try {
+        const response = await fetch(API_URL_PER, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,7 +49,34 @@ export const fetchConsequencia = async () => {
         });
 
         if (!response.ok) {
+
             throw new Error('Erro ao buscar Consequencia');
+          
+            throw new Error('Erro ao buscar a pergunta');
+
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error; // Relança o erro para tratamento no componente
+    }
+};
+
+export const AddPerguntaPersonalizada = async () => {
+    try {
+        const response = await fetch(API_URL_PER, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-apikey': API_KEY,
+                'cache-control': 'no-cache',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao adicionar a pergunta');
         }
 
         const data = await response.json();

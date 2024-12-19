@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
+
 const MainActivity = ({ goToQuestionScreen }) => {
     return (
         <View style={styles.container}>
@@ -20,7 +21,7 @@ const MainActivity = ({ goToQuestionScreen }) => {
                         <Text style={styles.buttonText}>Verdade ou Consequência</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={goToCustomGameScreen}>
                         <Text style={styles.buttonText}>Verdade ou Consequência Personalizado</Text>
                     </TouchableOpacity>
                 </View>
