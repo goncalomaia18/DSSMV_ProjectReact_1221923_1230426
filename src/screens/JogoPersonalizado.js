@@ -10,24 +10,12 @@ import {
 import { AddPerguntaPersonalizada } from '../services/api';
 import PerguntaPersonlizadoScreen from "./PerguntaPersonlizadoScreen";
 
-const JogoPersonalizado = () => {
+const JogoPersonalizado = ({goToPerguntapersonalizadoScreen}) => {
     const [novaPergunta, setNovaPergunta] = useState(''); // Texto do input
     const [exibirInput, setExibirInput] = useState(false); // Controla a exibição do campo
     const [tipoPergunta, setTipoPergunta] = useState(''); // "Verdade" ou "Consequência"
     const [isQuestionScreen, setIsQuestionScreen] = useState(false);
 
-    const goToQuestionScreen = () => {
-        setIsQuestionScreen(true);
-    };
-
-    // Função para voltar para a tela inicial
-    const goBack = () => {
-        setIsQuestionScreen(false);
-    };
-
-    if (isQuestionScreen) {
-        return <PerguntaPersonlizadoScreen goBack={goBack} />;
-    }
 
     // Função para salvar a pergunta
     const handleSalvarPergunta = async () => {
@@ -112,7 +100,7 @@ const JogoPersonalizado = () => {
             )}
 
             {/* Botão "Jogar" */}
-            <TouchableOpacity style={styles.playButton} onPress={goToQuestionScreen}>
+            <TouchableOpacity style={styles.playButton} onPress={goToPerguntapersonalizadoScreen}>
                 <Text style={styles.playButtonText}>Jogar</Text>
             </TouchableOpacity>
         </View>

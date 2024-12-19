@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 
-const MainActivity = ({ goToQuestionScreen }) => {
+const MainActivity = ({ goToQuestionScreen, goToJogoPersonalizadoScreen }) => {
     return (
         <View style={styles.container}>
             <View style={styles.toolbar}>
@@ -21,7 +21,7 @@ const MainActivity = ({ goToQuestionScreen }) => {
                         <Text style={styles.buttonText}>Verdade ou Consequência</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button} onPress={goToCustomGameScreen}>
+                    <TouchableOpacity style={styles.button} onPress={goToJogoPersonalizadoScreen}>
                         <Text style={styles.buttonText}>Verdade ou Consequência Personalizado</Text>
                     </TouchableOpacity>
                 </View>
