@@ -4,20 +4,18 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
-    Alert,
     TextInput,
+    Alert,
 } from 'react-native';
-
-import PerguntaPersonlizadoScreen from "./PerguntaPersonlizadoScreen";
 import { AddPerguntaPersonalizada } from '../services/api';
-
+import PerguntaPersonlizadoScreen from "./PerguntaPersonlizadoScreen";
 
 const JogoPersonalizado = () => {
+    const [novaPergunta, setNovaPergunta] = useState(''); // Texto do input
+    const [exibirInput, setExibirInput] = useState(false); // Controla a exibição do campo
+    const [tipoPergunta, setTipoPergunta] = useState(''); // "Verdade" ou "Consequência"
     const [isQuestionScreen, setIsQuestionScreen] = useState(false);
 
-    const [novaPergunta, setNovaPergunta] = useState('');
-
-    // Função para navegar para a tela de perguntas
     const goToQuestionScreen = () => {
         setIsQuestionScreen(true);
     };
@@ -27,39 +25,39 @@ const JogoPersonalizado = () => {
         setIsQuestionScreen(false);
     };
 
-    // Se estiver na tela de perguntas, exibe a tela de perguntas
     if (isQuestionScreen) {
         return <PerguntaPersonlizadoScreen goBack={goBack} />;
     }
 
-    const adicionarPergunta = async () => {
+    // Função para salvar a pergunta
+    const handleSalvarPergunta = async () => {
         if (!novaPergunta.trim()) {
-            Alert.alert('Erro', 'O campo de pergunta não pode estar vazio.');
+            Alert.alert('Erro', 'A pergunta não pode estar vazia!');
             return;
         }
 
         try {
-            const data = await AddPerguntaPersonalizada({ pergunta: novaPergunta });
-            Alert.alert('Sucesso', 'Pergunta adicionada com sucesso!');
-            setNovaPergunta(''); // Limpa o campo de entrada
+            await AddPerguntaPersonalizada({ pergunta: novaPergunta, tipo: tipoPergunta });
+            Alert.alert('Sucesso', `${tipoPergunta} adicionada com sucesso!`);
+            setNovaPergunta('');
+            setExibirInput(false); // Esconde o input após salvar
         } catch (error) {
-            Alert.alert('Erro', 'Não foi possível adicionar a pergunta.');
+            Alert.alert('Erro', 'Não foi possível salvar a pergunta.');
         }
     };
-
 
     return (
         <View style={styles.container}>
             {/* Seção "Verdade" */}
             <Text style={styles.title}>Verdade</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Digite uma nova verdade"
-                value={novaPergunta}
-                onChangeText={setNovaPergunta}
-            />
             <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.button}  onPress={adicionarPergunta}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                        setTipoPergunta('Verdade');
+                        setExibirInput(true); // Mostra o input para Verdade
+                    }}
+                >
                     <Text style={styles.buttonText}>Adicionar Verdade</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}>
@@ -70,13 +68,48 @@ const JogoPersonalizado = () => {
             {/* Seção "Consequência" */}
             <Text style={styles.title}>Consequência</Text>
             <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                        setTipoPergunta('Consequência');
+                        setExibirInput(true); // Mostra o input para Consequência
+                    }}
+                >
                     <Text style={styles.buttonText}>Adicionar Consequência</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button}>
                     <Text style={styles.buttonText}>Remover Consequência</Text>
                 </TouchableOpacity>
             </View>
+
+            {/* Input para Adicionar Pergunta */}
+            {exibirInput && (
+                <View style={styles.inputContainer}>
+                    <Text style={styles.inputTitle}>
+                        Digite a nova {tipoPergunta.toLowerCase()}:
+                    </Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder={`Exemplo: Conte um segredo engraçado.`}
+                        value={novaPergunta}
+                        onChangeText={setNovaPergunta}
+                    />
+                    <View style={styles.inputButtons}>
+                        <TouchableOpacity
+                            style={styles.saveButton}
+                            onPress={handleSalvarPergunta}
+                        >
+                            <Text style={styles.buttonText}>Salvar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.saveButton, styles.cancelButton]}
+                            onPress={() => setExibirInput(false)} // Fecha o input
+                        >
+                            <Text style={styles.buttonText}>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )}
 
             {/* Botão "Jogar" */}
             <TouchableOpacity style={styles.playButton} onPress={goToQuestionScreen}>
@@ -86,47 +119,74 @@ const JogoPersonalizado = () => {
     );
 };
 
+export default JogoPersonalizado;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
+        padding: 16,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#ff0077',
+        color: '#D81B60',
         marginBottom: 20,
     },
     buttonRow: {
         flexDirection: 'row',
-        marginBottom: 30,
+        justifyContent: 'space-around',
+        marginVertical: 10,
     },
     button: {
-        backgroundColor: '#ff3399',
-        borderRadius: 25,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        marginHorizontal: 10,
+        backgroundColor: '#D81B60',
+        padding: 16,
+        marginTop: 10,
+        borderRadius: 8,
+        width: '40%',
+        alignItems: 'center',
     },
     buttonText: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 16,
-        fontWeight: 'bold',
     },
     playButton: {
-        backgroundColor: '#ff0066',
-        borderRadius: 25,
-        paddingVertical: 15,
-        paddingHorizontal: 60,
-        marginTop: 20,
+        backgroundColor: '#D81B60',
+        padding: 16,
+        marginTop: 15,
+        borderRadius: 8,
+        width: '40%',
+        alignItems: 'center',
+        alignSelf: 'center',
     },
-    playButtonText: {
-        color: '#fff',
+    cancelButton: {
+        backgroundColor: '#B00020',
+    },
+    inputContainer: {
+        backgroundColor: '#F9F9F9',
+        padding: 15,
+        borderRadius: 8,
+        marginHorizontal: 16,
+        marginTop: 20,
+        elevation: 2, // Sombra no Android
+        shadowColor: '#000', // Sombra no iOS
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+    },
+    inputTitle: {
         fontSize: 18,
+        color: '#D81B60',
+        marginBottom: 10,
         fontWeight: 'bold',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#CCCCCC',
+        borderRadius: 8,
+        padding: 10,
+        fontSize: 16,
+        marginBottom: 15,
     },
 });
 
-export default JogoPersonalizado;
