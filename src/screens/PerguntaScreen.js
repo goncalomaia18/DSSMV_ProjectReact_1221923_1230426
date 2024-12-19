@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { fetchPergunta } from '../services/api'; // Caminho para o arquivo da API
+import { fetchPergunta } from '../services/api';
 
-const PerguntaScreen = ({ goBack }) => {
+const PerguntaScreen = ({ goBack, goToConsequenceScreen }) => {
     const [pergunta, setPergunta] = useState('Carregando pergunta...');
 
-    // Função para carregar uma pergunta
     const carregarPergunta = async () => {
         try {
             const data = await fetchPergunta();
             if (data.length > 0) {
                 const perguntaAleatoria = data[Math.floor(Math.random() * data.length)];
-                setPergunta(perguntaAleatoria.perguntas); // Atualiza com uma pergunta aleatória
+                setPergunta(perguntaAleatoria.perguntas);
             } else {
                 setPergunta('Nenhuma pergunta encontrada.');
             }
@@ -20,20 +19,16 @@ const PerguntaScreen = ({ goBack }) => {
         }
     };
 
-    // Carrega uma pergunta ao montar o componente
     useEffect(() => {
         carregarPergunta();
     }, []);
 
-
     return (
         <View style={styles.container}>
-            {/* Botão de Voltar */}
             <TouchableOpacity onPress={goBack} style={styles.backButton}>
                 <Text style={styles.buttonText}>← Voltar</Text>
             </TouchableOpacity>
 
-            {/* Conteúdo da tela de Perguntas */}
             <View style={styles.mainContent}>
                 <Text style={styles.title}>Verdade</Text>
                 <Text style={styles.pergunta}>{pergunta}</Text>
@@ -42,7 +37,7 @@ const PerguntaScreen = ({ goBack }) => {
                     <Text style={styles.buttonText}>Respondeu</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={goToConsequenceScreen}>
                     <Text style={styles.buttonText}>Consequência</Text>
                 </TouchableOpacity>
             </View>
@@ -77,9 +72,10 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
         color: '#D81B60',
-        marginBottom: 20,
+        fontWeight: 'bold',
+        marginBottom: 24,
+        textAlign: 'center',
     },
     pergunta: {
         fontSize: 18,
