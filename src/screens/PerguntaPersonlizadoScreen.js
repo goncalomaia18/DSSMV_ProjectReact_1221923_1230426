@@ -11,7 +11,7 @@ const PerguntaPersonalizadoScreen = ({ goBack }) => {
             const data = await fetchPerguntaPersonalizada();
             if (data.length > 0) {
                 const perguntaAleatoria = data[Math.floor(Math.random() * data.length)];
-                setPergunta(perguntaAleatoria.perguntas);
+                setPergunta(perguntaAleatoria.perguntaspersonalizado);
             } else {
                 setPergunta('Nenhuma pergunta encontrada.');
             }
