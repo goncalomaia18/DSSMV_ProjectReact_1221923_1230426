@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { FetchPerguntasPersonalizadas } from '../services/api';
+import { fetchConsequenciaPersonalizada } from '../services/api'; // Caminho para o arquivo da API
 
-const PerguntaPersonalizadoScreen = ({ goBack }) => {
-    const [pergunta, setPergunta] = useState('A carregar pergunta...');
+const ConsequenciaPersonalizadaScreen = ({ goBack, goToPerguntaPersonalizadaScreen }) => {
+    const [consequencia, setConsequencia] = useState('A carregar consequencia...');
 
     // Função para carregar uma pergunta
-    const carregarPergunta = async () => {
+    const carregarConsequencia = async () => {
         try {
-            const data = await FetchPerguntasPersonalizadas();
+            const data = await fetchConsequenciaPersonalizada();
             if (data.length > 0) {
                 const perguntaAleatoria = data[Math.floor(Math.random() * data.length)];
-                setPergunta(perguntaAleatoria.perguntaspersonalizado);
+                setConsequencia(perguntaAleatoria.consequenciasPersonlizada);
             } else {
-                setPergunta('Nenhuma pergunta encontrada.');
+                setConsequencia('Nenhuma consequencia encontrada.');
             }
         } catch (error) {
-            setPergunta('Erro ao carregar pergunta.');
+            setConsequencia('Erro ao carregar consequencia.');
         }
     };
 
     // Carrega uma pergunta ao montar o componente
     useEffect(() => {
-        carregarPergunta();
+        carregarConsequencia();
     }, []);
 
 
@@ -35,15 +35,15 @@ const PerguntaPersonalizadoScreen = ({ goBack }) => {
 
             {/* Conteúdo da tela de Perguntas */}
             <View style={styles.mainContent}>
-                <Text style={styles.title}>Verdade</Text>
-                <Text style={styles.pergunta}>{pergunta}</Text>
+                <Text style={styles.title}>Consequencia</Text>
+                <Text style={styles.pergunta}>{consequencia}</Text>
 
-                <TouchableOpacity style={styles.button} onPress={carregarPergunta}>
-                    <Text style={styles.buttonText}>Respondeu</Text>
+                <TouchableOpacity style={styles.button} onPress={carregarConsequencia}>
+                    <Text style={styles.buttonText}>Fez</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Consequência</Text>
+                <TouchableOpacity style={styles.button} onPress={goToPerguntaPersonalizadaScreen}>
+                    <Text style={styles.buttonText}>Verdade</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PerguntaPersonalizadoScreen;
+export default ConsequenciaPersonalizadaScreen;

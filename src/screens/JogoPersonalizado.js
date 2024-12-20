@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -6,31 +6,109 @@ import {
     StyleSheet,
     TextInput,
     Alert,
+    FlatList,
+    Modal,
 } from 'react-native';
-import { AddPerguntaPersonalizada } from '../services/api';
-import PerguntaPersonlizadoScreen from "./PerguntaPersonlizadoScreen";
+import {
+    AddPerguntaPersonalizada,
+    AddConsequenciaPersonalizada,
+    DeletePerguntaPersonalizada,
+    FetchPerguntasPersonalizadas,
+} from '../services/api';
 
-const JogoPersonalizado = ({goToPerguntapersonalizadoScreen}) => {
-    const [novaPergunta, setNovaPergunta] = useState(''); // Texto do input
-    const [exibirInput, setExibirInput] = useState(false); // Controla a exibição do campo
-    const [tipoPergunta, setTipoPergunta] = useState(''); // "Verdade" ou "Consequência"
-    const [isQuestionScreen, setIsQuestionScreen] = useState(false);
+const JogoPersonalizado = ({ goToPerguntapersonalizadoScreen }) => {
+    const [novaEntrada, setNovaEntrada] = useState('');
+    const [exibirInput, setExibirInput] = useState(false);
+    const [tipoEntrada, setTipoEntrada] = useState('');
+    const [perguntas, setPerguntas] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selecionada, setSelecionada] = useState(null);
 
+    useEffect(() => {
+        const carregarPerguntas = async () => {
+            try {
+                const data = await FetchPerguntasPersonalizadas();
+                setPerguntas(data);
+            } catch (error) {
+                Alert.alert('Erro', 'Não foi possível carregar as perguntas.');
+            }
+        };
 
-    // Função para salvar a pergunta
+        carregarPerguntas();
+    }, []);
+
+    // Função para salvar Verdade
     const handleSalvarPergunta = async () => {
-        if (!novaPergunta.trim()) {
-            Alert.alert('Erro', 'A pergunta não pode estar vazia!');
+        if (!novaEntrada.trim()) {
+            Alert.alert('Erro', 'A verdade não pode estar vazia!');
             return;
         }
 
         try {
-            await AddPerguntaPersonalizada({ pergunta: novaPergunta, tipo: tipoPergunta });
-            Alert.alert('Sucesso', `${tipoPergunta} adicionada com sucesso!`);
-            setNovaPergunta('');
-            setExibirInput(false); // Esconde o input após salvar
+            await AddPerguntaPersonalizada({ pergunta: novaEntrada });
+            Alert.alert('Sucesso', 'Verdade adicionada com sucesso!');
+            setNovaEntrada('');
+            setExibirInput(false);
+            setPerguntas((prevPerguntas) => [
+                ...prevPerguntas,
+                { id: new Date().toISOString(), pergunta: novaEntrada },
+            ]);
         } catch (error) {
-            Alert.alert('Erro', 'Não foi possível salvar a pergunta.');
+            Alert.alert('Erro', 'Não foi possível salvar a verdade.');
+        }
+    };
+
+    // Função para salvar Consequência
+    const handleSalvarConsequencia = async () => {
+        if (!novaEntrada.trim()) {
+            Alert.alert('Erro', 'A consequência não pode estar vazia!');
+            return;
+        }
+
+        try {
+            await AddConsequenciaPersonalizada({ consequencia: novaEntrada });
+            Alert.alert('Sucesso', 'Consequência adicionada com sucesso!');
+            setNovaEntrada('');
+            setExibirInput(false);
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível salvar a consequência.');
+        }
+    };
+
+    // Função para salvar dependendo do tipo de entrada (Verdade ou Consequência)
+    const handleSalvar = () => {
+        if (tipoEntrada === 'Verdade') {
+            handleSalvarPergunta();
+        } else if (tipoEntrada === 'Consequência') {
+            handleSalvarConsequencia();
+        }
+    };
+
+    // Função para listar todas as perguntas
+    const handleListarPerguntas = async () => {
+        try {
+            const data = await FetchPerguntasPersonalizadas();
+            setPerguntas(data);
+            setModalVisible(true);
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível carregar as perguntas.');
+        }
+    };
+
+    // Função para deletar uma pergunta
+    const handleDeletarPergunta = async () => {
+        if (!selecionada) {
+            Alert.alert('Erro', 'Por favor, selecione uma pergunta.');
+            return;
+        }
+
+        try {
+            await DeletePerguntaPersonalizada(selecionada.id);
+            Alert.alert('Sucesso', 'Pergunta removida com sucesso!');
+            setPerguntas((prev) => prev.filter((p) => p.id !== selecionada.id));
+            setModalVisible(false);
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível remover a pergunta.');
         }
     };
 
@@ -42,13 +120,13 @@ const JogoPersonalizado = ({goToPerguntapersonalizadoScreen}) => {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => {
-                        setTipoPergunta('Verdade');
-                        setExibirInput(true); // Mostra o input para Verdade
+                        setTipoEntrada('Verdade');
+                        setExibirInput(true);
                     }}
                 >
                     <Text style={styles.buttonText}>Adicionar Verdade</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={handleListarPerguntas}>
                     <Text style={styles.buttonText}>Remover Verdade</Text>
                 </TouchableOpacity>
             </View>
@@ -59,45 +137,85 @@ const JogoPersonalizado = ({goToPerguntapersonalizadoScreen}) => {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => {
-                        setTipoPergunta('Consequência');
-                        setExibirInput(true); // Mostra o input para Consequência
+                        setTipoEntrada('Consequência');
+                        setExibirInput(true);
                     }}
                 >
                     <Text style={styles.buttonText}>Adicionar Consequência</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={handleListarPerguntas}>
                     <Text style={styles.buttonText}>Remover Consequência</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Input para Adicionar Pergunta */}
+            {/* Input para Adicionar Entrada */}
             {exibirInput && (
                 <View style={styles.inputContainer}>
                     <Text style={styles.inputTitle}>
-                        Digite a nova {tipoPergunta.toLowerCase()}:
+                        Digite a nova {tipoEntrada.toLowerCase()}:
                     </Text>
                     <TextInput
                         style={styles.input}
-                        placeholder={`Exemplo: Conte um segredo engraçado.`}
-                        value={novaPergunta}
-                        onChangeText={setNovaPergunta}
+                        placeholder={`Exemplo: ${
+                            tipoEntrada === 'Verdade'
+                                ? 'Conte um segredo engraçado'
+                                : 'Dance por 1 minuto'
+                        }`}
+                        value={novaEntrada}
+                        onChangeText={setNovaEntrada}
                     />
                     <View style={styles.inputButtons}>
-                        <TouchableOpacity
-                            style={styles.saveButton}
-                            onPress={handleSalvarPergunta}
-                        >
+                        <TouchableOpacity style={styles.saveButton} onPress={handleSalvar}>
                             <Text style={styles.buttonText}>Salvar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.saveButton, styles.cancelButton]}
-                            onPress={() => setExibirInput(false)} // Fecha o input
+                            onPress={() => setExibirInput(false)}
                         >
                             <Text style={styles.buttonText}>Cancelar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             )}
+
+            {/* Modal para remover perguntas */}
+            <Modal visible={modalVisible} animationType="slide" transparent={true}>
+                <View style={styles.modalContainer}>
+                    <Text style={styles.modalTitle}>Selecione uma pergunta para remover</Text>
+                    <FlatList
+                        data={perguntas}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={[
+                                    styles.listItem,
+                                    item.id === selecionada?.id && styles.selectedItem,
+                                ]}
+                                onPress={() => setSelecionada(item)}
+                            >
+                                <Text>{item.pergunta}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <View style={styles.modalButtons}>
+                        <TouchableOpacity
+                            style={styles.deleteButton}
+                            onPress={handleDeletarPergunta}
+                        >
+                            <Text style={styles.buttonText}>Remover</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.deleteButton, styles.cancelButton]}
+                            onPress={() => {
+                                setModalVisible(false);
+                                setSelecionada(null);
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Cancelar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
 
             {/* Botão "Jogar" */}
             <TouchableOpacity style={styles.playButton} onPress={goToPerguntapersonalizadoScreen}>
@@ -106,7 +224,6 @@ const JogoPersonalizado = ({goToPerguntapersonalizadoScreen}) => {
         </View>
     );
 };
-
 export default JogoPersonalizado;
 
 const styles = StyleSheet.create({

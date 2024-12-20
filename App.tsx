@@ -5,6 +5,7 @@ import PerguntaScreen from './src/screens/PerguntaScreen';
 import ConsequenciaScreen from './src/screens/ConsequenciaScreen';
 import JogoPersonalizado from "./src/screens/JogoPersonalizado";
 import PerguntaPersonlizadoScreen from "./src/screens/PerguntaPersonlizadoScreen";
+import ConsequenciaPersonalizadaScreen from "./src/screens/ConsequenciaPersonalizadaScreen";
 
 const App = () => {
     const [currentScreen, setCurrentScreen] = useState('home'); // Controla a navegação entre telas
@@ -15,6 +16,8 @@ const App = () => {
     const goBackToHome = () => setCurrentScreen('home'); // Voltar para a tela inicial
     const goToJogoPersonalizadoScreen = () => setCurrentScreen('jogopersonalizado'); // Vai para o jogo personalizado
     const goToPerguntapersonalizadoScreen = () => setCurrentScreen('perguntapersonalizado')
+
+
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -48,6 +51,13 @@ const App = () => {
             {currentScreen === 'perguntapersonalizado' && (
                 <PerguntaPersonlizadoScreen
                 goBack={goToJogoPersonalizadoScreen}/>
+            )}
+
+            {currentScreen === 'consequenciaPersonalizada' && (
+                <ConsequenciaPersonalizadaScreen
+                    goBack={goBackToHome}
+                    goToPerguntaPersonalizadaScreen={() => setCurrentScreen('perguntaPersonalizada')}
+                />
             )}
         </SafeAreaView>
     );

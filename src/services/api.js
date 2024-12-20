@@ -52,10 +52,10 @@ export const fetchConsequencia = async () => {
     }
 };
 
-export const fetchPerguntaPersonalizada = async () => {
+export const FetchPerguntasPersonalizadas = async () => {
     try {
         const response = await fetch(API_URL_PER, {
-            method: 'GET',
+            method: 'GET',  //
             headers: {
                 'Content-Type': 'application/json',
                 'x-apikey': API_KEY,
@@ -64,14 +64,14 @@ export const fetchPerguntaPersonalizada = async () => {
         });
 
         if (!response.ok) {
-            throw new Error('Erro ao buscar pergunta');
+            throw new Error('Erro ao carregar as perguntas');
         }
 
         const data = await response.json();
-        return data;
+        return data; // Retorna as perguntas
     } catch (error) {
         console.error(error);
-        throw error; // Relança o erro para tratamento no componente
+        throw error;  // Relança o erro para poder ser tratado em outro lugar
     }
 };
 
@@ -98,3 +98,70 @@ export const AddPerguntaPersonalizada = async () => {
     }
 };
 
+export const fetchConsequenciaPersonalizada = async () => {
+    try {
+        const response = await fetch(API_URL_PER, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-apikey': API_KEY,
+                'cache-control': 'no-cache',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar pergunta');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error; // Relança o erro para tratamento no componente
+    }
+};
+
+export const AddConsequenciaPersonalizada = async () => {
+    try {
+        const response = await fetch(API_URL_PER, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-apikey': API_KEY,
+                'cache-control': 'no-cache',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao adicionar a pergunta');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error; // Relança o erro para tratamento no componente
+    }
+};
+export const DeletePerguntaPersonalizada = async () => {
+    try {
+        const response = await fetch(API_URL_PER, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-apikey': API_KEY,
+                'cache-control': 'no-cache',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao adicionar a pergunta');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error; // Relança o erro para tratamento no componente
+    }
+};
