@@ -95,7 +95,6 @@ const JogoPersonalizado = ({ goToPerguntapersonalizadoScreen }) => {
         }
     };
 
-    // Função para deletar uma pergunta
     const handleDeletarPergunta = async () => {
         if (!selecionada) {
             Alert.alert('Erro', 'Por favor, selecione uma pergunta.');
