@@ -45,13 +45,14 @@ const JogoPersonalizado = ({ goToPerguntapersonalizadoScreen }) => {
         }
 
         try {
-            await AddPerguntaPersonalizada({ pergunta: novaEntrada });
+            const novaPergunta = novaEntrada.trim(); // Salva o valor atual
+            await AddPerguntaPersonalizada(novaPergunta);
             Alert.alert('Sucesso', 'Verdade adicionada com sucesso!');
             setNovaEntrada('');
             setExibirInput(false);
             setPerguntas((prevPerguntas) => [
                 ...prevPerguntas,
-                { id: new Date().toISOString(), pergunta: novaEntrada },
+                { id: new Date().toISOString(), pergunta: novaPergunta },
             ]);
         } catch (error) {
             Alert.alert('Erro', 'Não foi possível salvar a verdade.');
