@@ -75,7 +75,7 @@ export const FetchPerguntasPersonalizadas = async () => {
     }
 };
 
-export const AddPerguntaPersonalizada = async () => {
+export const AddPerguntaPersonalizada = async (novaPergunta) => {
     try {
         const response = await fetch(API_URL_PER, {
             method: 'POST',
@@ -84,6 +84,7 @@ export const AddPerguntaPersonalizada = async () => {
                 'x-apikey': API_KEY,
                 'cache-control': 'no-cache',
             },
+            body: JSON.stringify({ perguntaspersonalizado: novaPergunta }),
         });
 
         if (!response.ok) {

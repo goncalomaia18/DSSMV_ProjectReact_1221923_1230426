@@ -52,7 +52,7 @@ const JogoPersonalizado = ({ goToPerguntapersonalizadoScreen }) => {
             setExibirInput(false);
             setPerguntas((prevPerguntas) => [
                 ...prevPerguntas,
-                { id: new Date().toISOString(), pergunta: novaPergunta },
+                { id: new Date().toISOString(), perguntaspersonalizado: novaPergunta },
             ]);
         } catch (error) {
             Alert.alert('Erro', 'Não foi possível salvar a verdade.');
