@@ -3,9 +3,10 @@ import { SafeAreaView, StatusBar } from 'react-native';
 import MainActivity from './src/screens/MainActivity';
 import PerguntaScreen from './src/screens/PerguntaScreen';
 import ConsequenciaScreen from './src/screens/ConsequenciaScreen';
-import JogoPersonalizado from "./src/screens/JogoPersonalizado";
-import PerguntaPersonlizadoScreen from "./src/screens/PerguntaPersonlizadoScreen";
-import ConsequenciaPersonalizadaScreen from "./src/screens/ConsequenciaPersonalizadaScreen";
+import JogoPersonalizado from './src/screens/JogoPersonalizado';
+import PerguntaPersonalizadoScreen from './src/screens/PerguntaPersonlizadoScreen';
+import StoreProvider from './src/Store/JogoPersonalizadoStore'; // Importe o StoreProvider
+
 
 const App = () => {
     const [currentScreen, setCurrentScreen] = useState('home'); // Controla a navegação entre telas
@@ -15,11 +16,12 @@ const App = () => {
     const goToConsequenceScreen = () => setCurrentScreen('consequence');
     const goBackToHome = () => setCurrentScreen('home'); // Voltar para a tela inicial
     const goToJogoPersonalizadoScreen = () => setCurrentScreen('jogopersonalizado'); // Vai para o jogo personalizado
-    const goToPerguntapersonalizadoScreen = () => setCurrentScreen('perguntapersonalizado')
+    const goToPerguntaPersonalizadoScreen = () => setCurrentScreen('perguntapersonalizado');
 
 
 
     return (
+        <StoreProvider>
         <SafeAreaView style={{ flex: 1 }}>
             <StatusBar barStyle="light-content" />
 
@@ -32,7 +34,7 @@ const App = () => {
 
             {currentScreen === 'question' && (
                 <PerguntaScreen
-                    goBack={goBackToHome}  // Passando goBack para voltar à tela inicial
+                    goBack={goBackToHome} // Passando goBack para voltar à tela inicial
                     goToConsequenceScreen={goToConsequenceScreen}
                 />
             )}
@@ -45,23 +47,18 @@ const App = () => {
 
             {currentScreen === 'jogopersonalizado' && (
                 <JogoPersonalizado
-                    goToPerguntapersonalizadoScreen={goToPerguntapersonalizadoScreen} />
+                    goToPerguntaPersonalizadoScreen={goToPerguntaPersonalizadoScreen} // Corrigir caso seja um erro de nome
+                />
             )}
 
             {currentScreen === 'perguntapersonalizado' && (
-                <PerguntaPersonlizadoScreen
-                goBack={goToJogoPersonalizadoScreen}/>
-            )}
-
-            {currentScreen === 'consequenciaPersonalizada' && (
-                <ConsequenciaPersonalizadaScreen
-                    goBack={goBackToHome}
-                    goToPerguntaPersonalizadaScreen={() => setCurrentScreen('perguntaPersonalizada')}
+                <PerguntaPersonalizadoScreen
+                    goBack={goToJogoPersonalizadoScreen} // Verificar se goToJogoPersonalizadoScreen está definido corretamente
                 />
             )}
         </SafeAreaView>
+            </StoreProvider>
     );
 };
 
 export default App;
-

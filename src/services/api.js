@@ -144,9 +144,15 @@ export const AddConsequenciaPersonalizada = async () => {
         throw error; // Relança o erro para tratamento no componente
     }
 };
-export const DeletePerguntaPersonalizada = async () => {
+export const DeletePerguntaPersonalizada = async (pergunta) => {
     try {
-        const response = await fetch(API_URL_PER, {
+        if (!pergunta || !pergunta._id) {
+            throw new Error('Pergunta não encontrada ou ID inválido.');
+        }
+
+        console.log(`Tentando deletar a pergunta: ${pergunta.perguntaspersonalizado}`);
+        // Faz a requisição para deletar a pergunta usando o _id
+        const response = await fetch(`${API_URL_PER}/${pergunta._id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -156,13 +162,16 @@ export const DeletePerguntaPersonalizada = async () => {
         });
 
         if (!response.ok) {
-            throw new Error('Erro ao adicionar a pergunta');
+            const errorData = await response.json(); // Detalha o erro
+            console.error('Erro ao deletar a pergunta:', errorData);
+            throw new Error('Erro ao deletar a pergunta');
         }
 
-        const data = await response.json();
-        return data;
+        console.log('Pergunta deletada com sucesso!');
+        return { success: true };
     } catch (error) {
-        console.error(error);
-        throw error; // Relança o erro para tratamento no componente
+        console.error('Erro inesperado:', error);  // Log do erro completo
+        throw error;
     }
 };
+
