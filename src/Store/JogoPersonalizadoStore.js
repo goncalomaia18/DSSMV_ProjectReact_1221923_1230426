@@ -6,6 +6,7 @@ export const StoreContext = createContext();
 const StoreProvider = ({ children }) => {
     const [state, dispatch] = useReducer(perguntaReducer, {
         perguntas: [],
+        consequencias: [],
         loading: false,
         error: null,
     });
