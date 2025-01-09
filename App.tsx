@@ -5,7 +5,8 @@ import PerguntaScreen from './src/screens/PerguntaScreen';
 import ConsequenciaScreen from './src/screens/ConsequenciaScreen';
 import JogoPersonalizado from './src/screens/JogoPersonalizado';
 import PerguntaPersonalizadoScreen from './src/screens/PerguntaPersonlizadoScreen';
-import StoreProvider from './src/Store/JogoPersonalizadoStore'; // Importe o StoreProvider
+import StoreProvider from './src/Store/JogoPersonalizadoStore';
+import ConsequenciaPersonalizadoScreen from './src/screens/ConsequenciaPersonalizadaScreen';
 
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
     const goBackToHome = () => setCurrentScreen('home'); // Voltar para a tela inicial
     const goToJogoPersonalizadoScreen = () => setCurrentScreen('jogopersonalizado'); // Vai para o jogo personalizado
     const goToPerguntaPersonalizadoScreen = () => setCurrentScreen('perguntapersonalizado');
+    const goToConsequenciasPersonalizadoScreen = () => setCurrentScreen('consequenciaspersonalizado');
 
 
 
@@ -53,7 +55,14 @@ const App = () => {
 
             {currentScreen === 'perguntapersonalizado' && (
                 <PerguntaPersonalizadoScreen
-                    goBack={goToJogoPersonalizadoScreen} // Verificar se goToJogoPersonalizadoScreen está definido corretamente
+                    goBack={goToJogoPersonalizadoScreen} // Volta para a tela de Jogo Personalizado
+                    goToConsequenciasPersonalizadoScreen={goToConsequenciasPersonalizadoScreen()}
+                />
+            )}
+            {currentScreen === 'consequenciaspersonalizado' && (
+                <ConsequenciaPersonalizadoScreen
+                    goBack={goToJogoPersonalizadoScreen} // Volta para a tela de Perguntas Personalizadas
+                    goToPerguntaPersonalizadaScreen={goToPerguntaPersonalizadoScreen} // Vai para a tela de Perguntas Personalizadas
                 />
             )}
         </SafeAreaView>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FetchPerguntasPersonalizadas } from '../services/api';
 
-const PerguntaPersonalizadoScreen = ({ goBack }) => {
+const PerguntaPersonalizadoScreen = ({ goBack, goToConsequenciasPersonalizadoScreen }) => {
     const [pergunta, setPergunta] = useState('A carregar pergunta...');
 
     // Função para carregar uma pergunta
@@ -25,7 +25,6 @@ const PerguntaPersonalizadoScreen = ({ goBack }) => {
         carregarPergunta();
     }, []);
 
-
     return (
         <View style={styles.container}>
             {/* Botão de Voltar */}
@@ -42,7 +41,8 @@ const PerguntaPersonalizadoScreen = ({ goBack }) => {
                     <Text style={styles.buttonText}>Respondeu</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button}>
+                {/* Botão Consequência */}
+                <TouchableOpacity style={styles.button} onPress={goToConsequenceScreen}>
                     <Text style={styles.buttonText}>Consequência</Text>
                 </TouchableOpacity>
             </View>
@@ -98,3 +98,4 @@ const styles = StyleSheet.create({
 });
 
 export default PerguntaPersonalizadoScreen;
+

@@ -15,7 +15,7 @@ import {
     fetchConsequenciasPersonalizadasAction,
 } from '../PersonalizadoController/JogoPersonalizadoActions';
 
-const JogoPersonalizado = () => {
+const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen }) => {
     const { state, dispatch } = useContext(StoreContext);
 
     // Garante que state existe antes de tentar acessar
@@ -115,6 +115,12 @@ const JogoPersonalizado = () => {
                 onSelectConsequencia={setSelecionada} // Define a consequência selecionada
                 selecionada={selecionada}
             />
+            <TouchableOpacity
+                style={[styles.button, styles.playButton]} // Botão de "Joga"
+                onPress={goToPerguntaPersonalizadoScreen} // Função de navegação
+            >
+                <Text style={styles.buttonText}>Joga</Text>
+            </TouchableOpacity>
         </View>
 
     );
@@ -159,6 +165,10 @@ const styles = StyleSheet.create({
             fontWeight: 'bold',
             textAlign: 'center',
             fontSize: 16,
+        },
+        playButton: {
+            marginTop: 20,
+            backgroundColor: '#D81B60',
         },
     });
 
