@@ -49,7 +49,8 @@ const App = () => {
 
             {currentScreen === 'jogopersonalizado' && (
                 <JogoPersonalizado
-                    goToPerguntaPersonalizadoScreen={goToPerguntaPersonalizadoScreen} // Corrigir caso seja um erro de nome
+                    goToPerguntaPersonalizadoScreen={goToPerguntaPersonalizadoScreen}
+                    goBack={goBackToHome}
                 />
             )}
 

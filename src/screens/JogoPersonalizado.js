@@ -15,7 +15,7 @@ import {
     fetchConsequenciasPersonalizadasAction,
 } from '../PersonalizadoController/JogoPersonalizadoActions';
 
-const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen }) => {
+const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen, goBack }) => {
     const { state, dispatch } = useContext(StoreContext);
 
     // Garante que state existe antes de tentar acessar
@@ -61,6 +61,11 @@ const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen }) => {
     };
     return (
         <View style={styles.container}>
+
+            <TouchableOpacity onPress={goBack} style={styles.backButton}>
+                <Text style={styles.buttonText}>← Voltar</Text>
+            </TouchableOpacity>
+
             <Text style={styles.title}>Jogo Personalizado</Text>
             <Text style={styles.subtitle}>Verdade</Text>
             <View style={styles.buttonContainer}>
@@ -93,7 +98,7 @@ const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen }) => {
                     style={[styles.button]} // Botão de "Joga"
                     onPress={goToPerguntaPersonalizadoScreen} // Função de navegação
                 >
-                    <Text style={styles.buttonText}>Joga</Text>
+                    <Text style={styles.buttonText}>Jogar</Text>
                 </TouchableOpacity>
             </View>
             {/* Modal de Adicionar Pergunta */}
@@ -156,6 +161,16 @@ const styles = StyleSheet.create({
             alignItems: 'center',
             width: '100%', // Garantir que o container ocupe o espaço inteiro
             maxWidth: 400, // Tamanho máximo do container para centralizar bem
+        },
+        backButton: {
+            marginBottom: 20,
+            backgroundColor: '#D81B60',
+            paddingVertical: 10,
+            paddingHorizontal: 16,
+            borderRadius: 8,
+            alignItems: 'center',
+            width: 'auto',
+            alignSelf: 'flex-start',
         },
         button: {
             flex: 1, // Ambos os botões terão o mesmo tamanho
