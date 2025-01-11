@@ -11,7 +11,7 @@ const ConsequenciaPersonalizadaScreen = ({ goBack, goToPerguntaPersonalizadaScre
             const data = await fetchConsequenciaPersonalizada();
             if (data.length > 0) {
                 const perguntaAleatoria = data[Math.floor(Math.random() * data.length)];
-                setConsequencia(perguntaAleatoria.consequenciasPersonlizada);
+                setConsequencia(perguntaAleatoria.consequenciaspersonalizado);
             } else {
                 setConsequencia('Nenhuma consequencia encontrada.');
             }

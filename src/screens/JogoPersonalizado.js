@@ -86,6 +86,16 @@ const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen }) => {
                     <Text style={styles.buttonText}>Remover Consequência</Text>
                 </TouchableOpacity>
             </View>
+
+            <View style={styles.buttonContainer}>
+                <Text style={styles.subtitle}>Jogo</Text>
+                <TouchableOpacity
+                    style={[styles.button]} // Botão de "Joga"
+                    onPress={goToPerguntaPersonalizadoScreen} // Função de navegação
+                >
+                    <Text style={styles.buttonText}>Joga</Text>
+                </TouchableOpacity>
+            </View>
             {/* Modal de Adicionar Pergunta */}
             <ModalPerguntasAdd
                 visible={modalAddVisible}
@@ -115,12 +125,6 @@ const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen }) => {
                 onSelectConsequencia={setSelecionada} // Define a consequência selecionada
                 selecionada={selecionada}
             />
-            <TouchableOpacity
-                style={[styles.button, styles.playButton]} // Botão de "Joga"
-                onPress={goToPerguntaPersonalizadoScreen} // Função de navegação
-            >
-                <Text style={styles.buttonText}>Joga</Text>
-            </TouchableOpacity>
         </View>
 
     );
@@ -169,6 +173,11 @@ const styles = StyleSheet.create({
         playButton: {
             marginTop: 20,
             backgroundColor: '#D81B60',
+            paddingVertical: 16,
+            borderRadius: 16,
+            alignSelf: 'center',
+            width: '60%',
+            maxWidth: 250,
         },
     });
 

@@ -56,7 +56,7 @@ const App = () => {
             {currentScreen === 'perguntapersonalizado' && (
                 <PerguntaPersonalizadoScreen
                     goBack={goToJogoPersonalizadoScreen} // Volta para a tela de Jogo Personalizado
-                    goToConsequenciasPersonalizadoScreen={goToConsequenciasPersonalizadoScreen()}
+                    goToConsequenciasPersonalizadoScreen={goToConsequenciasPersonalizadoScreen}
                 />
             )}
             {currentScreen === 'consequenciaspersonalizado' && (

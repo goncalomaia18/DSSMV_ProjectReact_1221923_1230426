@@ -42,7 +42,7 @@ const PerguntaPersonalizadoScreen = ({ goBack, goToConsequenciasPersonalizadoScr
                 </TouchableOpacity>
 
                 {/* Botão Consequência */}
-                <TouchableOpacity style={styles.button} onPress={goToConsequenceScreen}>
+                <TouchableOpacity style={styles.button} onPress={goToConsequenciasPersonalizadoScreen}>
                     <Text style={styles.buttonText}>Consequência</Text>
                 </TouchableOpacity>
             </View>
