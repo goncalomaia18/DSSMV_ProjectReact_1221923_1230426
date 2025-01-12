@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { fetchPergunta } from '../services/api';
+import { accelerometer } from "react-native-sensors";
+import { setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
+
+// Configuração para frequência de leitura do acelerômetro
+setUpdateIntervalForType(SensorTypes.accelerometer, 100);
 
 const PerguntaScreen = ({ goBack, goToConsequenceScreen }) => {
     const [pergunta, setPergunta] = useState('Carregando pergunta...');
+    const [isShaking, setIsShaking] = useState(false); // Controle de debounce do shake
 
     const carregarPergunta = async () => {
         try {
@@ -19,8 +25,31 @@ const PerguntaScreen = ({ goBack, goToConsequenceScreen }) => {
         }
     };
 
+    // Processa os dados do acelerômetro para detectar "shake"
+    const processarShake = ({ x, y, z }) => {
+        const magnitude = Math.sqrt(x * x + y * y + z * z);
+        const threshold = 23; // Limiar ajustável de sensibilidade
+
+        if (magnitude > threshold && !isShaking) {
+            setIsShaking(true);
+            carregarPergunta();
+
+            // Reseta o debounce após 1 segundo
+            setTimeout(() => setIsShaking(false), 1000);
+        }
+    };
+
     useEffect(() => {
+        // Subscrição no acelerômetro
+        const subscription = accelerometer.subscribe({
+            next: processarShake,
+        });
+
+        // Carregar pergunta inicial
         carregarPergunta();
+
+        // Cleanup ao desmontar o componente
+        return () => subscription.unsubscribe();
     }, []);
 
     return (
@@ -94,3 +123,4 @@ const styles = StyleSheet.create({
 });
 
 export default PerguntaScreen;
+

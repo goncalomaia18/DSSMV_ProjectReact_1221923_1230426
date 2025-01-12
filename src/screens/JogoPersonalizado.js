@@ -93,12 +93,10 @@ const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen, goBack }) => {
             </View>
 
             <View style={styles.buttonContainer}>
-                <Text style={styles.subtitle}>Jogo</Text>
                 <TouchableOpacity
                     style={[styles.button]} // Botão de "Joga"
                     onPress={goToPerguntaPersonalizadoScreen} // Função de navegação
-                >
-                    <Text style={styles.buttonText}>Jogar</Text>
+                ><Text style={styles.buttonText}>Jogar</Text>
                 </TouchableOpacity>
             </View>
             {/* Modal de Adicionar Pergunta */}
@@ -136,64 +134,64 @@ const JogoPersonalizado = ({ goToPerguntaPersonalizadoScreen, goBack }) => {
 };
 
 const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            padding: 16,
-            justifyContent: 'center', // Centralizar no eixo vertical
-            alignItems: 'center', // Centralizar no eixo horizontal
-            backgroundColor: '#FFF',
-        },
-        title: {
-            fontSize: 24,
-            fontWeight: 'bold',
-            marginBottom: 32,
-            textAlign: 'center',
-        },
-        subtitle: {
-            fontSize: 20,
-            fontWeight: 'bold',
-            marginBottom: 32, // Distância abaixo do título
-            textAlign: 'center',
-        },
-        buttonContainer: {
-            flexDirection: 'row', // Alinha os botões na horizontal
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            width: '100%', // Garantir que o container ocupe o espaço inteiro
-            maxWidth: 400, // Tamanho máximo do container para centralizar bem
-        },
-        backButton: {
-            marginBottom: 20,
-            backgroundColor: '#D81B60',
-            paddingVertical: 10,
-            paddingHorizontal: 16,
-            borderRadius: 8,
-            alignItems: 'center',
-            width: 'auto',
-            alignSelf: 'flex-start',
-        },
-        button: {
-            flex: 1, // Ambos os botões terão o mesmo tamanho
-            backgroundColor: '#D81B60',
-            paddingVertical: 16,
-            borderRadius: 16, // Mantém bordas arredondadas
-            marginHorizontal: 8, // Espaço entre os botões
-        },
-        buttonText: {
-            color: 'white',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            fontSize: 16,
-        },
-        playButton: {
-            marginTop: 20,
-            backgroundColor: '#D81B60',
-            paddingVertical: 16,
-            borderRadius: 16,
-            alignSelf: 'center',
-            width: '60%',
-            maxWidth: 250,
-        },
-    });
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#FFF',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 60,
+        marginBottom: 16,
+    },
+    subtitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 16,
+    },
+    buttonContainer: {
+        flexDirection: 'row', // Botões lado a lado
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        maxWidth: 400, // Controla o tamanho máximo dos botões
+        alignSelf: 'center',
+        marginBottom: 16, // Espaço entre containers de botões
+    },
+    backButton: {
+        position: 'absolute',
+        top: 16,
+        left: 16, // Alinha ao lado esquerdo
+        backgroundColor: '#D81B60',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+    },
+    button: {
+        flex: 1,
+        backgroundColor: '#D81B60',
+        paddingVertical: 16,
+        borderRadius: 16,
+        marginHorizontal: 8,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontSize: 16,
+    },
+    playButton: {
+        backgroundColor: '#D81B60',
+        paddingVertical: 16,
+        borderRadius: 16,
+        width: '60%', // Controla o tamanho horizontal do botão
+        maxWidth: 250,
+        alignSelf: 'center', // Centraliza na tela
+        marginBottom: 32, // Espaço abaixo do botão "Jogar"
+    },
+});
 
 export default JogoPersonalizado;

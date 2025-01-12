@@ -1,10 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import {fetchConsequencia} from "../services/api";
+import { fetchConsequencia } from "../services/api";
+import { accelerometer } from "react-native-sensors";
+import { setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
+
+// Configuração para atualização do sensor
+setUpdateIntervalForType(SensorTypes.accelerometer, 100);
 
 const ConsequenciaScreen = ({ onRespondeuConsequencia }) => {
     const [consequencia, setConsequencia] = useState('Carregando Consequência...');
+    const [consequenciasOptions, setConsequenciasOptions] = useState([]);
+    const [isShaking, setIsShaking] = useState(false); // Flag para detectar shake recente
 
+    // Função para carregar as consequências
     const carregarConsequencia = async () => {
         try {
             const data = await fetchConsequencia();
@@ -19,21 +27,42 @@ const ConsequenciaScreen = ({ onRespondeuConsequencia }) => {
         }
     };
 
-    useEffect(() => {
-        carregarConsequencia();
-    }, []);
+    // Função para processar shake baseado na magnitude
+    const processarShake = ({ x, y, z }) => {
+        const magnitude = Math.sqrt(x * x + y * y + z * z); // Cálculo da magnitude do movimento
+        const threshold = 23; // Ajuste para definir a sensibilidade do shake
 
+        if (magnitude > threshold && !isShaking) {
+            setIsShaking(true); // Impede detecções consecutivas
+            carregarConsequencia();
+
+            // Redefinir isShaking após 1 segundo para permitir outro shake
+            setTimeout(() => setIsShaking(false), 1000);
+        }
+    };
+
+    useEffect(() => {
+        // Começar a observar o acelerômetro
+        const subscription = accelerometer.subscribe({
+            next: processarShake, // Processa os dados do acelerômetro
+        });
+
+        // Carregar a primeira consequência ao iniciar
+        carregarConsequencia();
+
+        // Limpeza do listener ao desmontar o componente
+        return () => subscription.unsubscribe();
+    }, []);
 
     return (
         <View style={styles.container}>
-
             <View style={styles.mainContent}>
                 <Text style={styles.title}>Consequência</Text>
                 <Text style={styles.consequencia}>{consequencia}</Text>
 
                 {/* Botão Nova Consequência */}
                 <TouchableOpacity style={styles.button} onPress={carregarConsequencia}>
-                    <Text style={styles.buttonText}>Consequência</Text>
+                    <Text style={styles.buttonText}>Nova Consequência</Text>
                 </TouchableOpacity>
 
                 {/* Botão Respondeu */}
@@ -84,3 +113,4 @@ const styles = StyleSheet.create({
 });
 
 export default ConsequenciaScreen;
+

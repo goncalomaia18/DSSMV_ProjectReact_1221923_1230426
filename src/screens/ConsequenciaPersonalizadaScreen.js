@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { fetchConsequenciaPersonalizada } from '../services/api'; // Caminho para o arquivo da API
+import { accelerometer } from 'react-native-sensors';
+import { setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
+
+// Configura o intervalo de leitura do acelerômetro
+setUpdateIntervalForType(SensorTypes.accelerometer, 100);
 
 const ConsequenciaPersonalizadaScreen = ({ goBack, goToPerguntaPersonalizadaScreen }) => {
     const [consequencia, setConsequencia] = useState('A carregar consequencia...');
+    const [isShaking, setIsShaking] = useState(false); // Controle de debounce do shake
 
-    // Função para carregar uma pergunta
+    // Função para carregar uma consequência
     const carregarConsequencia = async () => {
         try {
             const data = await fetchConsequenciaPersonalizada();
             if (data.length > 0) {
-                const perguntaAleatoria = data[Math.floor(Math.random() * data.length)];
-                setConsequencia(perguntaAleatoria.consequenciaspersonalizado);
+                const consequenciaAleatoria = data[Math.floor(Math.random() * data.length)];
+                setConsequencia(consequenciaAleatoria.consequenciaspersonalizado);
             } else {
                 setConsequencia('Nenhuma consequencia encontrada.');
             }
@@ -20,11 +26,32 @@ const ConsequenciaPersonalizadaScreen = ({ goBack, goToPerguntaPersonalizadaScre
         }
     };
 
-    // Carrega uma pergunta ao montar o componente
-    useEffect(() => {
-        carregarConsequencia();
-    }, []);
+    // Função que processa movimentos de shake
+    const processarShake = ({ x, y, z }) => {
+        const magnitude = Math.sqrt(x * x + y * y + z * z);
+        const threshold = 20; // Ajuste de sensibilidade ao shake
 
+        if (magnitude > threshold && !isShaking) {
+            setIsShaking(true);
+            carregarConsequencia();
+
+            // Reseta a flag após um segundo (debounce)
+            setTimeout(() => setIsShaking(false), 1000);
+        }
+    };
+
+    useEffect(() => {
+        // Subscrição no acelerômetro
+        const subscription = accelerometer.subscribe({
+            next: processarShake,
+        });
+
+        // Carrega a consequência inicial
+        carregarConsequencia();
+
+        // Cleanup ao desmontar o componente
+        return () => subscription.unsubscribe();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -33,15 +60,16 @@ const ConsequenciaPersonalizadaScreen = ({ goBack, goToPerguntaPersonalizadaScre
                 <Text style={styles.buttonText}>← Voltar</Text>
             </TouchableOpacity>
 
-            {/* Conteúdo da tela de Perguntas */}
+            {/* Conteúdo da tela de Consequência */}
             <View style={styles.mainContent}>
-                <Text style={styles.title}>Consequencia</Text>
+                <Text style={styles.title}>Consequência</Text>
                 <Text style={styles.pergunta}>{consequencia}</Text>
 
                 <TouchableOpacity style={styles.button} onPress={carregarConsequencia}>
                     <Text style={styles.buttonText}>Fez</Text>
                 </TouchableOpacity>
 
+                {/* Botão Verdade */}
                 <TouchableOpacity style={styles.button} onPress={goToPerguntaPersonalizadaScreen}>
                     <Text style={styles.buttonText}>Verdade</Text>
                 </TouchableOpacity>
@@ -98,3 +126,4 @@ const styles = StyleSheet.create({
 });
 
 export default ConsequenciaPersonalizadaScreen;
+

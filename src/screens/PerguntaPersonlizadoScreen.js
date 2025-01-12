@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FetchPerguntasPersonalizadas } from '../services/api';
+import { accelerometer } from 'react-native-sensors';
+import { setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
+
+// Configura o intervalo de leitura do acelerômetro
+setUpdateIntervalForType(SensorTypes.accelerometer, 100);
 
 const PerguntaPersonalizadoScreen = ({ goBack, goToConsequenciasPersonalizadoScreen }) => {
     const [pergunta, setPergunta] = useState('A carregar pergunta...');
+    const [isShaking, setIsShaking] = useState(false); // Controle de debounce do shake
 
     // Função para carregar uma pergunta
     const carregarPergunta = async () => {
@@ -20,9 +26,31 @@ const PerguntaPersonalizadoScreen = ({ goBack, goToConsequenciasPersonalizadoScr
         }
     };
 
-    // Carrega uma pergunta ao montar o componente
+    // Função que processa os movimentos de shake
+    const processarShake = ({ x, y, z }) => {
+        const magnitude = Math.sqrt(x * x + y * y + z * z);
+        const threshold = 20; // Ajuste de sensibilidade ao shake
+
+        if (magnitude > threshold && !isShaking) {
+            setIsShaking(true);
+            carregarPergunta();
+
+            // Reseta a flag após um segundo (debounce)
+            setTimeout(() => setIsShaking(false), 1000);
+        }
+    };
+
     useEffect(() => {
+        // Subscrição no acelerômetro
+        const subscription = accelerometer.subscribe({
+            next: processarShake,
+        });
+
+        // Carrega a pergunta inicial
         carregarPergunta();
+
+        // Cleanup ao desmontar o componente
+        return () => subscription.unsubscribe();
     }, []);
 
     return (
@@ -32,7 +60,7 @@ const PerguntaPersonalizadoScreen = ({ goBack, goToConsequenciasPersonalizadoScr
                 <Text style={styles.buttonText}>← Voltar</Text>
             </TouchableOpacity>
 
-            {/* Conteúdo da tela de Perguntas */}
+            {/* Conteúdo principal */}
             <View style={styles.mainContent}>
                 <Text style={styles.title}>Verdade</Text>
                 <Text style={styles.pergunta}>{pergunta}</Text>
@@ -98,4 +126,3 @@ const styles = StyleSheet.create({
 });
 
 export default PerguntaPersonalizadoScreen;
-
